@@ -17,8 +17,6 @@ class App extends React.Component {
             lon: address.lon
         }
         const query = 'https://api.astrodigital.com/v2.0/search/?' + 'contains=' + location.lat + ',' + location.lon;
-
-        console.log(query);
         axios.get(query)
         .then((response) => {
             console.log(response);
