@@ -10,7 +10,6 @@ class App extends React.Component {
             imageURL: null
         }
     }
-
     findSatelliteImage(address){
         //geocode address and get {lat, lon}
         const location = {
