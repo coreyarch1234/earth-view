@@ -3,15 +3,25 @@ import './App.css';
 import Search from './search'
 var axios = require('axios'); //to make Ajax requests
 
+
+require('dotenv').config();
+const geocode_api_key = process.env.REACT_APP_GEOCODE_API_KEY;
+
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            imageURL: null
+            imageURL: null,
+            imageError: null,
+            city: null,
+            state: null
         }
     }
+    // geoCode(address, callback){
+    //
+    // }
     findSatelliteImage(address){
-        //geocode address and get {lat, lon}
+        //geocode function with this body as callback with lat,lon as parameter
         const location = {
             lat: address.lat,
             lon: address.lon
@@ -20,18 +30,20 @@ class App extends React.Component {
         axios.get(query)
         .then((response) => {
             console.log(response);
-            this.setState({imageURL: response.data.results[0].thumbnail});
+            this.setState({imageURL: response.data.results[0].thumbnail, imageError: false});
         })
-        .catch(function (error) {
+        .catch((error) => {
+            console.log("error occurred");
+            this.setState({imageError: true})
             console.log(error);
         });
     }
 
     showImage(){
-        if (this.state.imageURL === null){
-            return <div></div>;
+        if (this.state.imageError === true){
+            return <p style = {styles.errorText}>Enter a new address</p>;
         }else{
-            return <img src={this.state.imageURL}/>;
+            return <img src={this.state.imageURL} style = {styles.image}/>;
         }
     }
 
@@ -42,17 +54,18 @@ class App extends React.Component {
         return(
             <div>
             <Search
-                placeholder="Enter Address"
+                placeholderCity="Enter City"
+                placeholderState="Enter State"
                 label = "Search"
                 onSubmit={(address) => {
-                    console.log("address: ", address);
-                    const addressArr = address.split(",");
-                    console.log(addressArr);
-                    address = {
-                        lat: addressArr[0],
-                        lon: addressArr[1]
+                    var addressArr = {
+                        city: address.searchCity,
+                        state: address.searchState
                     }
-                    this.findSatelliteImage(address);
+                    console.log("api key: " + geocode_api_key);
+                    console.log(addressArr);
+                    // console.log("city: ", city);
+                    // this.findSatelliteImage(address);
             }}/>
             {this.showImage()}
             </div>
@@ -60,5 +73,23 @@ class App extends React.Component {
     }
 
 }
+var styles = {
+    image: {
+        position: 'absolute',
+        left: '50%',
+        transform: 'translate(-50%,50%)'
+    },
+    errorText: {
+        color: 'red',
+        position: 'absolute',
+        left: '50%',
+        transform: 'translate(-50%,500%)',
+        fontSize: 25
+    }
+}
+// AIzaSyDTz7r5lJisnMBK7AAHOFE_kM5RQ_aalpk
+
+
+
 
 export default App;
