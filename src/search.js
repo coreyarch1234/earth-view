@@ -75,7 +75,7 @@ const styles = {
         paddingRight: 16,
         display: 'block',
         textAlign: 'center',
-        marginBottom: 50
+        marginBottom: 25
     },
     button: {
         // backgroundColor: 'transparent',
@@ -89,7 +89,7 @@ const styles = {
         paddingRight: 25,
         outline: 'none',
         cursor: 'pointer',
-        marginTop: 10
+        marginBottom: 10
 
     }
 }

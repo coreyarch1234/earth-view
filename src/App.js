@@ -17,26 +17,60 @@ class App extends React.Component {
             state: null
         }
     }
-    // geoCode(address, callback){
-    //
-    // }
-    findSatelliteImage(address){
-        //geocode function with this body as callback with lat,lon as parameter
-        const location = {
-            lat: address.lat,
-            lon: address.lon
-        }
-        const query = 'https://api.astrodigital.com/v2.0/search/?' + 'contains=' + location.lat + ',' + location.lon;
+    geoCode(address, callback){
+        const city = address.city.split(' ').join('+');
+        const state = address.state;
+        console.log("the city is: " + city);
+        console.log("the state is: " + state);
+        const query = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + state + '&key=' + geocode_api_key;
+
         axios.get(query)
         .then((response) => {
             console.log(response);
-            this.setState({imageURL: response.data.results[0].thumbnail, imageError: false});
+            console.log("lat: " + response.data.results[0].geometry.location.lat);
+            console.log("lon: " + response.data.results[0].geometry.location.lng);
+            const coordinates = {
+                lat: response.data.results[0].geometry.location.lat,
+                lon: response.data.results[0].geometry.location.lng
+            }
+            callback(coordinates);
         })
         .catch((error) => {
             console.log("error occurred");
-            this.setState({imageError: true})
             console.log(error);
         });
+
+        // const coordinates = {
+        //     lat: response.data.results[0].geometry.location.lat,
+        //     lon: response.data.results[0].geometry.location.lng
+        // }
+    }
+    findSatelliteImage(address){
+        //geocode function with this body as callback with lat,lon as parameter
+        this.geoCode(address,(coordinates) => {
+            const query = 'https://api.astrodigital.com/v2.0/search/?' + 'contains=' + coordinates.lat + ',' + coordinates.lon;
+            axios.get(query)
+            .then((response) => {
+                console.log(response);
+                this.setState({imageURL: response.data.results[0].thumbnail, imageError: false});
+            })
+            .catch((error) => {
+                console.log("error occurred");
+                this.setState({imageError: true})
+                console.log(error);
+            });
+        });
+        // const query = 'https://api.astrodigital.com/v2.0/search/?' + 'contains=' + location.lat + ',' + location.lon;
+        // axios.get(query)
+        // .then((response) => {
+        //     console.log(response);
+        //     this.setState({imageURL: response.data.results[0].thumbnail, imageError: false});
+        // })
+        // .catch((error) => {
+        //     console.log("error occurred");
+        //     this.setState({imageError: true})
+        //     console.log(error);
+        // });
     }
 
     showImage(){
@@ -58,14 +92,14 @@ class App extends React.Component {
                 placeholderState="Enter State"
                 label = "Search"
                 onSubmit={(address) => {
-                    var addressArr = {
+                    var addressObj = {
                         city: address.searchCity,
                         state: address.searchState
                     }
                     console.log("api key: " + geocode_api_key);
-                    console.log(addressArr);
-                    // console.log("city: ", city);
-                    // this.findSatelliteImage(address);
+                    console.log(addressObj);
+                    // this.geoCode(addressObj);
+                    this.findSatelliteImage(addressObj);
             }}/>
             {this.showImage()}
             </div>
@@ -77,13 +111,14 @@ var styles = {
     image: {
         position: 'absolute',
         left: '50%',
-        transform: 'translate(-50%,50%)'
+        transform: 'translate(-50%,80%)',
+        paddingBottom: 5
     },
     errorText: {
         color: 'red',
         position: 'absolute',
         left: '50%',
-        transform: 'translate(-50%,500%)',
+        transform: 'translate(-50%,1000%)',
         fontSize: 25
     }
 }
