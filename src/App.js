@@ -39,11 +39,6 @@ class App extends React.Component {
             console.log("error occurred");
             console.log(error);
         });
-
-        // const coordinates = {
-        //     lat: response.data.results[0].geometry.location.lat,
-        //     lon: response.data.results[0].geometry.location.lng
-        // }
     }
     findSatelliteImage(address){
         //geocode function with this body as callback with lat,lon as parameter
@@ -60,17 +55,6 @@ class App extends React.Component {
                 console.log(error);
             });
         });
-        // const query = 'https://api.astrodigital.com/v2.0/search/?' + 'contains=' + location.lat + ',' + location.lon;
-        // axios.get(query)
-        // .then((response) => {
-        //     console.log(response);
-        //     this.setState({imageURL: response.data.results[0].thumbnail, imageError: false});
-        // })
-        // .catch((error) => {
-        //     console.log("error occurred");
-        //     this.setState({imageError: true})
-        //     console.log(error);
-        // });
     }
 
     showImage(){
@@ -98,7 +82,6 @@ class App extends React.Component {
                     }
                     console.log("api key: " + geocode_api_key);
                     console.log(addressObj);
-                    // this.geoCode(addressObj);
                     this.findSatelliteImage(addressObj);
             }}/>
             {this.showImage()}
@@ -122,9 +105,5 @@ var styles = {
         fontSize: 25
     }
 }
-// AIzaSyDTz7r5lJisnMBK7AAHOFE_kM5RQ_aalpk
-
-
-
 
 export default App;
