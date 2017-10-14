@@ -19,10 +19,10 @@ class App extends React.Component {
     }
     geoCode(address, callback){
         const city = address.city.split(' ').join('+');
-        const state = address.state;
+        // const state = address.state;
         console.log("the city is: " + city);
-        console.log("the state is: " + state);
-        const query = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + state + '&key=' + geocode_api_key;
+        // console.log("the state is: " + state);
+        const query = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + '&key=' + geocode_api_key;
 
         axios.get(query)
         .then((response) => {
@@ -43,7 +43,7 @@ class App extends React.Component {
     findSatelliteImage(address){
         //geocode function with this body as callback with lat,lon as parameter
         this.geoCode(address,(coordinates) => {
-            const query = 'https://api.astrodigital.com/v2.0/search/?' + 'contains=' + coordinates.lat + ',' + coordinates.lon;
+            const query = 'https://api.astrodigital.com/v2.0/search/?contains=' + coordinates.lat + ',' + coordinates.lon;
             axios.get(query)
             .then((response) => {
                 console.log(response);
@@ -59,9 +59,9 @@ class App extends React.Component {
 
     showImage(){
         if (this.state.imageError === true){
-            return <p style = {styles.errorText}>Enter a new address</p>;
+            return <p style = {styles.errorText}>Location out of range. Enter a new one.</p>;
         }else{
-            return <img src={this.state.imageURL} style = {styles.image}/>;
+            return <img src={this.state.imageURL} alt = "" style = {styles.image}/>;
         }
     }
 
@@ -72,13 +72,11 @@ class App extends React.Component {
         return(
             <div>
             <Search
-                placeholderCity="Enter City"
-                placeholderState="Enter State"
+                placeholderCity="Enter City or State"
                 label = "Search"
                 onSubmit={(address) => {
                     var addressObj = {
-                        city: address.searchCity,
-                        state: address.searchState
+                        city: address.searchCity
                     }
                     console.log("api key: " + geocode_api_key);
                     console.log(addressObj);
@@ -94,7 +92,7 @@ var styles = {
     image: {
         position: 'absolute',
         left: '50%',
-        transform: 'translate(-50%,80%)',
+        transform: 'translate(-50%,50%)',
         paddingBottom: 5
     },
     errorText: {

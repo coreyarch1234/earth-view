@@ -33,15 +33,7 @@ class Search extends Component{
                             })
                         }} style={styles.input}/>
 
-                        <input
-                            type="text"
-                            placeholder = {this.props.placeholderState}
-                            value = {this.state.searchTerm}
-                            onChange={(e) => { //What you are typing in
-                                this.setState({
-                                    searchState: e.target.value
-                                })
-                            }} style={styles.input}/>
+
 
                     <button type="submit" style={styles.button}>{this.props.label}</button>
                 </form>
@@ -93,5 +85,15 @@ const styles = {
 
     }
 }
+
+// <input
+//     type="text"
+//     placeholder = {this.props.placeholderState}
+//     value = {this.state.searchTerm}
+//     onChange={(e) => { //What you are typing in
+//         this.setState({
+//             searchState: e.target.value
+//         })
+//     }} style={styles.input}/>
 
 export default Search;
