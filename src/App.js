@@ -1,7 +1,7 @@
 import React from 'react';
 import './App.css';
 import Search from './search'
-var axios = require('axios'); //to make Ajax requests
+var axios = require('axios'); // to make Ajax requests
 
 
 require('dotenv').config();
@@ -10,19 +10,22 @@ const geocode_api_key = process.env.REACT_APP_GEOCODE_API_KEY;
 class App extends React.Component {
     constructor(props) {
         super(props);
+
         this.state = {
-            imageURL: null,
-            imageError: null,
+            imageURL: null,     // holds the atellite image after it's found
+            imageError: null,   // Will be false if API returns no image
             city: null,
             state: null
         }
     }
+
     geoCode(address, callback){
         const city = address.city.split(' ').join('+');
         // const state = address.state;
         console.log("the city is: " + city);
         // console.log("the state is: " + state);
         const query = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + city + '&key=' + geocode_api_key;
+        // const query = `https://maps.googleapis.com/maps/api/geocode/json?address=${city}&key=${geocode_api_key}`;
 
         axios.get(query)
         .then((response) => {
@@ -39,6 +42,8 @@ class App extends React.Component {
             console.log("error occurred");
             console.log(error);
         });
+
+
     }
     findSatelliteImage(address){
         //geocode function with this body as callback with lat,lon as parameter
@@ -66,6 +71,7 @@ class App extends React.Component {
     }
 
     componentWillMount() {
+
     }
 
     render() {
@@ -75,6 +81,7 @@ class App extends React.Component {
                 placeholderCity="Enter City or State"
                 label = "Search"
                 onSubmit={(address) => {
+                    //keep JSX short. You can pass address into findSatelliteImage only
                     var addressObj = {
                         city: address.searchCity
                     }
